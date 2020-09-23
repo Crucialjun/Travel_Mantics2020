@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "349976396567",
+    "firebase_url": "https://travel-mantics-2020.firebaseio.com",
+    "project_id": "travel-mantics-2020",
+    "storage_bucket": "travel-mantics-2020.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:349976396567:android:191923bb7d7a62ebd3ad52",
+        "android_client_info": {
+          "package_name": "com.example.travelmantics2020"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "349976396567-mdlbiupp3shememflj1sld1ave91t3ep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIrM2koGVSOcQtcdwctynMuBR8PPLB3HA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "349976396567-mdlbiupp3shememflj1sld1ave91t3ep.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
