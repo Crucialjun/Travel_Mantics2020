@@ -1,32 +1,25 @@
 package com.example.travelmantics2020
 
 import android.os.Bundle
+import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.fragment_insert.*
+import kotlinx.coroutines.supervisorScope
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [InsertFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class InsertFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+
+    val mFirebaseDatabase = FirebaseDatabase.getInstance()
+    val mDatabaseReference = mFirebaseDatabase.reference.child("traveldeals")
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
@@ -37,23 +30,45 @@ class InsertFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_insert, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment InsertFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            InsertFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.save_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.save_menu -> {
+                saveDeal()
+                Toast.makeText(context, "Deal Saved", Toast.LENGTH_LONG).show()
+                clean()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun clean() {
+        txtTitle.text!!.clear()
+        txtDescription.text!!.clear()
+        txtPrice.text!!.clear()
+        txtTitle.requestFocus()
+
+    }
+
+    private fun saveDeal() {
+        val title = txtTitle.text.toString()
+        val description = txtDescription.text.toString()
+        val price = txtPrice.text.toString()
+
+        val deal = TravelDeal(title, description, price, "")
+        mDatabaseReference.push().setValue(deal)
+    }
+
+
 }
