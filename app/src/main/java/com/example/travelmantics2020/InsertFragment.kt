@@ -62,7 +62,7 @@ class InsertFragment : Fragment() {
         val description = txtDescription.text.toString()
         val price = txtPrice.text.toString()
 
-        val deal = TravelDeal(title, description, price, "")
+        val deal = TravelDeal(null,title, description, price, "")
         mDatabaseReference.push().setValue(deal)
     }
 

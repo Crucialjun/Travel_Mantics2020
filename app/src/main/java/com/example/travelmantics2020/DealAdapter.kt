@@ -12,36 +12,41 @@ import com.google.firebase.database.DatabaseError
 class DealAdapter() : RecyclerView.Adapter<DealAdapter.DealViewHolder>() {
 
     val dealsArray:ArrayList<TravelDeal> = ArrayList()
-    val firebaseUtil = FirebaseUtil.openFbReference("traveldeals")
-    val mFirebaseDatabase = FirebaseUtil.mFirebaseDatabase
     val deals = FirebaseUtil.mDeals
-    val mChildListener = object : ChildEventListener {
-        override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-            val deal = snapshot.getValue(TravelDeal::class.java)
-            deal!!.id = snapshot.key
-            dealsArray.add(deal)
-            notifyItemInserted(deals.size - 1)
+    init {
+
+        val firebaseUtil = FirebaseUtil.openFbReference("traveldeals")
+        val mFirebaseDatabase = FirebaseUtil.mFirebaseDatabase
+
+        val mChildListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val deal = snapshot.getValue(TravelDeal::class.java)
+                deal!!.id = snapshot.key
+                deals.add(deal)
+                notifyItemInserted(deals.size - 1)
+
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
 
         }
-
-        override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-            TODO("Not yet implemented")
-        }
-
-        override fun onChildRemoved(snapshot: DataSnapshot) {
-            TODO("Not yet implemented")
-        }
-
-        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-            TODO("Not yet implemented")
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            TODO("Not yet implemented")
-        }
-
+        val mDatabaseReference = FirebaseUtil.mDatabaseReference.addChildEventListener(mChildListener)
     }
-    val mDatabaseReference = FirebaseUtil.mDatabaseReference.addChildEventListener(mChildListener)
+
 
 
 
