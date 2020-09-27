@@ -3,11 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/insertFragment">
+    app:startDestination="@id/listFragment">
 
     <fragment
         android:id="@+id/insertFragment"
         android:name="com.example.travelmantics2020.InsertFragment"
         android:label="fragment_insert"
         tools:layout="@layout/fragment_insert" />
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.example.travelmantics2020.ListFragment"
+        android:label="fragment_list"
+        tools:layout="@layout/fragment_list" >
+        <action
+            android:id="@+id/action_listFragment_to_insertFragment"
+            app:destination="@id/insertFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_insertFragment2"
+            app:destination="@id/insertFragment" />
+    </fragment>
 </navigation>

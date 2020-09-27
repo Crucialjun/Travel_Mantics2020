@@ -12,8 +12,8 @@ import kotlinx.coroutines.supervisorScope
 class InsertFragment : Fragment() {
 
 
-    val mFirebaseDatabase = FirebaseDatabase.getInstance()
-    val mDatabaseReference = mFirebaseDatabase.reference.child("traveldeals")
+    private val mFirebaseDatabase = FirebaseDatabase.getInstance()
+    private val mDatabaseReference = mFirebaseDatabase.reference.child("traveldeals")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,10 +30,6 @@ class InsertFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_insert, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.save_menu, menu)
