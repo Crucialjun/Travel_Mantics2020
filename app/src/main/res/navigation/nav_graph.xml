@@ -18,8 +18,5 @@
         <action
             android:id="@+id/action_listFragment_to_insertFragment"
             app:destination="@id/insertFragment" />
-        <action
-            android:id="@+id/action_listFragment_to_insertFragment2"
-            app:destination="@id/insertFragment" />
     </fragment>
 </navigation>

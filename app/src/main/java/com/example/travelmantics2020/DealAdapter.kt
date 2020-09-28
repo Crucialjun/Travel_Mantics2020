@@ -14,6 +14,7 @@ class DealAdapter() : RecyclerView.Adapter<DealAdapter.DealViewHolder>() {
     val dealsArray:ArrayList<TravelDeal> = ArrayList()
     val deals = FirebaseUtil.mDeals
     init {
+        deals.clear()
 
         val firebaseUtil = FirebaseUtil.openFbReference("traveldeals")
         val mFirebaseDatabase = FirebaseUtil.mFirebaseDatabase
@@ -55,9 +56,14 @@ class DealAdapter() : RecyclerView.Adapter<DealAdapter.DealViewHolder>() {
 
     class DealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
+        private val tvDescription: TextView = itemView.findViewById(R.id.tvDescription)
+        private val tvPrice: TextView = itemView.findViewById(R.id.tvPrice)
 
         fun bind(deal : TravelDeal){
             tvTitle.text = deal.title
+            tvDescription.text = deal.description
+            tvPrice.text = deal.price
+
         }
     }
 

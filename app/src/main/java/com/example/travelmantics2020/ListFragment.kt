@@ -1,21 +1,23 @@
 package com.example.travelmantics2020
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_list.*
 
 
 class ListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
 
     }
@@ -35,5 +37,20 @@ class ListFragment : Fragment() {
         rvDeals.adapter = dealAdapater
         val dealslayoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         rvDeals.layoutManager = dealslayoutManager
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.list_activity_menu,menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.insert_menu -> {
+                findNavController().navigate(R.id.action_listFragment_to_insertFragment)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
