@@ -9,7 +9,16 @@
         android:id="@+id/insertFragment"
         android:name="com.example.travelmantics2020.InsertFragment"
         android:label="fragment_insert"
-        tools:layout="@layout/fragment_insert" />
+        tools:layout="@layout/fragment_insert" >
+        <argument
+            android:name="selectedDeal"
+            app:argType="com.example.travelmantics2020.TravelDeal"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_insertFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+    </fragment>
     <fragment
         android:id="@+id/listFragment"
         android:name="com.example.travelmantics2020.ListFragment"
