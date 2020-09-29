@@ -3,18 +3,16 @@ package com.example.travelmantics2020
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_list.*
 
 
 class ListFragment : Fragment() {
+
+    companion object{
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -33,10 +31,7 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dealAdapater = DealAdapter()
-        rvDeals.adapter = dealAdapater
-        val dealslayoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-        rvDeals.layoutManager = dealslayoutManager
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -52,5 +47,21 @@ class ListFragment : Fragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        FirebaseUtil.detachListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        FirebaseUtil.openFbReference("traveldeals",activity)
+
+        val dealAdapater = DealAdapter()
+        rvDeals.adapter = dealAdapater
+        val dealslayoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        rvDeals.layoutManager = dealslayoutManager
+        FirebaseUtil.attachListener()
     }
 }

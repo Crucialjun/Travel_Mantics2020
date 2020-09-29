@@ -18,7 +18,6 @@ class DealAdapter() : RecyclerView.Adapter<DealAdapter.DealViewHolder>() {
     init {
         deals.clear()
 
-        val firebaseUtil = FirebaseUtil.openFbReference("traveldeals")
         val mFirebaseDatabase = FirebaseUtil.mFirebaseDatabase
 
         val mChildListener = object : ChildEventListener {
@@ -43,7 +42,7 @@ class DealAdapter() : RecyclerView.Adapter<DealAdapter.DealViewHolder>() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+
             }
 
         }
