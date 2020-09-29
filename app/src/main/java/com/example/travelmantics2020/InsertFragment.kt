@@ -37,7 +37,8 @@ class InsertFragment : androidx.fragment.app.Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.save_menu, menu)
-        if(FirebaseUtil.isAdmin){
+        val isAdmin = PrefManager.getInstance(requireContext()).isAdmin
+        if(isAdmin!!){
             menu.findItem(R.id.delete_menu).isVisible = true
             menu.findItem(R.id.save_menu).isVisible = true
             enableEditText(true)

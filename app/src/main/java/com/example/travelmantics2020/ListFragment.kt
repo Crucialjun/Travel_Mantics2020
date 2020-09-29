@@ -12,7 +12,7 @@ import com.google.android.gms.tasks.Task
 import kotlinx.android.synthetic.main.fragment_list.*
 
 
-class ListFragment : Fragment() {
+class ListFragment() : Fragment() {
 
     companion object{
 
@@ -43,7 +43,8 @@ class ListFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
 
         val insertMenu = menu.findItem(R.id.insert_menu)
-        insertMenu.isVisible = FirebaseUtil.isAdmin
+        val isAdmin = PrefManager.getInstance(requireContext()).isAdmin
+        insertMenu.isVisible = isAdmin
 
     }
 
@@ -59,9 +60,10 @@ class ListFragment : Fragment() {
                         "LOGOUT",
                         "onComplete: User Logged Out"
                     )
-                    FirebaseUtil.attachListener()
+                    FirebaseUtil().attachListener()
                 }
-                FirebaseUtil.detachListener()
+                FirebaseUtil().detachListener()
+                PrefManager.getInstance(requireContext()).clear()
                 return true
             }
         }
@@ -70,21 +72,23 @@ class ListFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        FirebaseUtil.detachListener()
+        FirebaseUtil().detachListener()
     }
 
     override fun onResume() {
         super.onResume()
-        FirebaseUtil.openFbReference("traveldeals",this)
+        FirebaseUtil().openFbReference("traveldeals",this)
 
         val dealAdapater = DealAdapter()
         rvDeals.adapter = dealAdapater
         val dealslayoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         rvDeals.layoutManager = dealslayoutManager
-        FirebaseUtil.attachListener()
+        FirebaseUtil().attachListener()
     }
 
     fun showMenu(){
         requireActivity().invalidateOptionsMenu()
     }
+
+
 }
