@@ -1,19 +1,23 @@
 package com.example.travelmantics2020
-
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_insert.*
-import kotlinx.coroutines.supervisorScope
+import kotlinx.android.synthetic.main.rv_row.*
 
 
-class InsertFragment : Fragment() {
+class InsertFragment : androidx.fragment.app.Fragment() {
 
 
     private val mFirebaseDatabase = FirebaseDatabase.getInstance()
     private val mDatabaseReference = mFirebaseDatabase.reference.child("traveldeals")
+    private val args : InsertFragmentArgs by navArgs()
+    private var deal = TravelDeal()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +47,13 @@ class InsertFragment : Fragment() {
                 saveDeal()
                 Toast.makeText(context, "Deal Saved", Toast.LENGTH_LONG).show()
                 clean()
+                backtoList()
+                return true
+            }
+            R.id.delete_menu ->{
+                deleteDeal()
+                Toast.makeText(context, "Deal Deleted", Toast.LENGTH_LONG).show()
+                backtoList()
                 return true
             }
         }
@@ -58,13 +69,39 @@ class InsertFragment : Fragment() {
     }
 
     private fun saveDeal() {
-        val title = txtTitle.text.toString()
-        val description = txtDescription.text.toString()
-        val price = txtPrice.text.toString()
+       deal.title = txtTitle.text.toString()
+        deal.description = txtDescription.text.toString()
+        deal.price = txtPrice.text.toString()
 
-        val deal = TravelDeal(title, description, price, "")
-        mDatabaseReference.push().setValue(deal)
+        if(deal.id == null){
+            mDatabaseReference.push().setValue(deal)
+        }else{
+            mDatabaseReference.child(deal.id!!).setValue(deal)
+        }
+
     }
 
+    private fun deleteDeal(){
+        if(deal == null){
+            Toast.makeText(context, "Please save a deal before deleting", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        mDatabaseReference.child(deal.id!!).removeValue()
+    }
+
+    private fun backtoList(){
+        findNavController().navigate(R.id.action_insertFragment_to_listFragment)
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if(args.selectedDeal != null){
+            deal = args.selectedDeal!!
+        }
+        txtTitle.setText(deal?.title)
+        txtDescription.setText(deal?.description)
+        txtPrice.setText(deal?.price)
+    }
 
 }
