@@ -37,7 +37,15 @@ class InsertFragment : androidx.fragment.app.Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.save_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+        if(FirebaseUtil.isAdmin){
+            menu.findItem(R.id.delete_menu).isVisible = true
+            menu.findItem(R.id.save_menu).isVisible = true
+            enableEditText(true)
+        }else{
+            menu.findItem(R.id.delete_menu).isVisible = false
+            menu.findItem(R.id.save_menu).isVisible = false
+            enableEditText(false)
+        }
 
     }
 
@@ -102,6 +110,12 @@ class InsertFragment : androidx.fragment.app.Fragment() {
         txtTitle.setText(deal?.title)
         txtDescription.setText(deal?.description)
         txtPrice.setText(deal?.price)
+    }
+
+    fun enableEditText(isEnabled : Boolean){
+        txtTitle.isEnabled = isEnabled
+        txtDescription.isEnabled = isEnabled
+        txtPrice.isEnabled = isEnabled
     }
 
 }
