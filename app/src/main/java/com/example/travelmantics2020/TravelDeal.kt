@@ -9,10 +9,12 @@ data class TravelDeal(
     var title: String?,
     var description: String?,
     var price: String?,
-    var imgUrl: String?
+    var imgUrl: String?,
+    var imgName: String?
 ) : Serializable,Parcelable {
 
     constructor(parcel: Parcel) : this(
+        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -21,7 +23,7 @@ data class TravelDeal(
     ) {
     }
 
-    constructor() : this(null,"","","","")
+    constructor() : this(null,"","","","","")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
@@ -29,6 +31,7 @@ data class TravelDeal(
         parcel.writeString(description)
         parcel.writeString(price)
         parcel.writeString(imgUrl)
+        parcel.writeString(imgName)
     }
 
     override fun describeContents(): Int {

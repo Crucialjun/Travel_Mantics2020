@@ -4,12 +4,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import kotlinx.android.synthetic.main.fragment_insert.*
 
 class DealAdapter() : RecyclerView.Adapter<DealAdapter.DealViewHolder>() {
 
@@ -33,11 +37,11 @@ class DealAdapter() : RecyclerView.Adapter<DealAdapter.DealViewHolder>() {
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -55,6 +59,7 @@ class DealAdapter() : RecyclerView.Adapter<DealAdapter.DealViewHolder>() {
         private val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         private val tvDescription: TextView = itemView.findViewById(R.id.tvDescription)
         private val tvPrice: TextView = itemView.findViewById(R.id.tvPrice)
+        private val imageView: ImageView = itemView.findViewById(R.id.imageDeal)
 
         init{
             itemView.setOnClickListener(this)
@@ -64,6 +69,7 @@ class DealAdapter() : RecyclerView.Adapter<DealAdapter.DealViewHolder>() {
             tvTitle.text = deal.title
             tvDescription.text = deal.description
             tvPrice.text = deal.price
+            showImage(deal.imgUrl!!)
 
         }
 
@@ -73,6 +79,14 @@ class DealAdapter() : RecyclerView.Adapter<DealAdapter.DealViewHolder>() {
             val selectedDeal = deals[position]
             val action = ListFragmentDirections.actionListFragmentToInsertFragment(selectedDeal)
             p0!!.findNavController().navigate(action)
+        }
+
+        fun showImage(url : String){
+            Glide.with(imageView.context)
+                .load(url)
+                .apply(RequestOptions.overrideOf(220,220))
+                .centerCrop()
+                .into(imageView)
         }
     }
 
@@ -89,5 +103,6 @@ class DealAdapter() : RecyclerView.Adapter<DealAdapter.DealViewHolder>() {
     override fun getItemCount(): Int {
         return deals.size
     }
+
 
 }

@@ -1,17 +1,17 @@
 package com.example.travelmantics2020
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.gms.tasks.OnSuccessListener
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.fragment_insert.*
-import kotlinx.android.synthetic.main.rv_row.*
 
 
 class InsertFragment : androidx.fragment.app.Fragment() {
@@ -45,10 +45,14 @@ class InsertFragment : androidx.fragment.app.Fragment() {
         if(isAdmin){
             menu.findItem(R.id.delete_menu).isVisible = true
             menu.findItem(R.id.save_menu).isVisible = true
+            btnImage.isEnabled = true
             enableEditText(true)
         }else{
             menu.findItem(R.id.delete_menu).isVisible = false
             menu.findItem(R.id.save_menu).isVisible = false
+            btnImage.isEnabled = false
+
+
             enableEditText(false)
         }
 
@@ -60,13 +64,13 @@ class InsertFragment : androidx.fragment.app.Fragment() {
                 saveDeal()
                 Toast.makeText(context, "Deal Saved", Toast.LENGTH_LONG).show()
                 clean()
-                backtoList()
+                backList()
                 return true
             }
             R.id.delete_menu ->{
                 deleteDeal()
                 Toast.makeText(context, "Deal Deleted", Toast.LENGTH_LONG).show()
-                backtoList()
+                backList()
                 return true
             }
         }
@@ -101,9 +105,17 @@ class InsertFragment : androidx.fragment.app.Fragment() {
         }
 
         mDatabaseReference.child(deal.id!!).removeValue()
+        if(deal.imgName != null && deal.imgName!!.isNotEmpty()) {
+            val picRef = FirebaseUtil.mStorageReference.child(deal.imgName!!)
+            picRef.delete().addOnSuccessListener {
+                Log.d("DELETE", "deleteDeal: Image Delete Success")
+            }.addOnFailureListener {
+                Log.d("DELETE", "Exception: ${it.message} ")
+            }
+        }
     }
 
-    private fun backtoList(){
+    private fun backList(){
         findNavController().navigate(R.id.action_insertFragment_to_listFragment)
     }
 
@@ -115,6 +127,7 @@ class InsertFragment : androidx.fragment.app.Fragment() {
         txtTitle.setText(deal.title)
         txtDescription.setText(deal.description)
         txtPrice.setText(deal.price)
+        showImage(deal.imgUrl!!)
         btnImage.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "image/jpeg"
@@ -136,11 +149,29 @@ class InsertFragment : androidx.fragment.app.Fragment() {
             val imageUri = data!!.data
             val ref = FirebaseUtil.mStorageReference.child(imageUri?.lastPathSegment!!)
             ref.putFile(imageUri).addOnSuccessListener (requireActivity()
-            ) {
-                val url = it.storage.downloadUrl
-                deal.imgUrl = "$url"
+            ) { uploadTask ->
+                val picName = uploadTask.storage.name
+                this.deal.imgName = picName
+                uploadTask.storage.downloadUrl.addOnSuccessListener {
+
+                    this.deal.imgUrl = it.toString()
+
+
+                    showImage(it.toString())
+                }
+
             }
         }
+    }
+
+    private fun showImage(url : String){
+        val width = Resources.getSystem().displayMetrics.widthPixels
+
+        Glide.with(this)
+            .load(url)
+            .apply(RequestOptions.overrideOf(width,width * 2 / 3))
+            .centerCrop()
+            .into(image)
     }
 
 }
