@@ -9,7 +9,7 @@ data class TravelDeal(
     var title: String?,
     var description: String?,
     var price: String?,
-    val imgUrl: String?
+    var imgUrl: String?
 ) : Serializable,Parcelable {
 
     constructor(parcel: Parcel) : this(

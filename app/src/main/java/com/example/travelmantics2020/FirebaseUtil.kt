@@ -5,6 +5,8 @@ import android.widget.Toast
 import com.firebase.ui.auth.AuthUI.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class FirebaseUtil{
 
@@ -16,8 +18,11 @@ class FirebaseUtil{
         lateinit var mDatabaseReference: DatabaseReference
         lateinit var mFirebaseAuth: FirebaseAuth
         lateinit var mAuthStateListener: FirebaseAuth.AuthStateListener
+        lateinit var mStorage: FirebaseStorage
+        lateinit var mStorageReference: StorageReference
         private var firebaseUtil: FirebaseUtil? = null
         val mDeals: ArrayList<TravelDeal> = ArrayList()
+
 
 
 
@@ -35,10 +40,14 @@ class FirebaseUtil{
             }else{
                 val userUid = it.currentUser!!.uid
                 checkAdmin(userUid,callerActivity)
-                Toast.makeText(callerActivity.requireActivity(), "Welcome Back", Toast.LENGTH_LONG).show()
+
             }
 
+            Toast.makeText(callerActivity.requireActivity(), "Welcome Back", Toast.LENGTH_LONG).show()
+
         }
+
+        connectStorage()
 
     }
 
@@ -47,7 +56,7 @@ class FirebaseUtil{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 callerActivity.showMenu()
                 PrefManager.getInstance(callerActivity.requireContext()).isAdmin = true
-                Log.d("Admin", "onChildAdded: You are an Administrator ")
+                Log.d("Admin", "onChildAdded: You are an Administra tor ")
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -96,13 +105,9 @@ class FirebaseUtil{
         mFirebaseAuth.removeAuthStateListener(mAuthStateListener)
     }
 
-}
-
-interface CheckAdministrator{
-    var hasAdminRights : Boolean
-
-    fun setRights(isAdmin : Boolean){
-        hasAdminRights = isAdmin
+    fun connectStorage(){
+        mStorage = FirebaseStorage.getInstance()
+        mStorageReference = mStorage.reference.child("deals_pictures")
     }
 
 }

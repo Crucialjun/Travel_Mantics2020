@@ -1,11 +1,15 @@
 package com.example.travelmantics2020
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.fragment_insert.*
 import kotlinx.android.synthetic.main.rv_row.*
 
@@ -38,7 +42,7 @@ class InsertFragment : androidx.fragment.app.Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.save_menu, menu)
         val isAdmin = PrefManager.getInstance(requireContext()).isAdmin
-        if(isAdmin!!){
+        if(isAdmin){
             menu.findItem(R.id.delete_menu).isVisible = true
             menu.findItem(R.id.save_menu).isVisible = true
             enableEditText(true)
@@ -108,15 +112,35 @@ class InsertFragment : androidx.fragment.app.Fragment() {
         if(args.selectedDeal != null){
             deal = args.selectedDeal!!
         }
-        txtTitle.setText(deal?.title)
-        txtDescription.setText(deal?.description)
-        txtPrice.setText(deal?.price)
+        txtTitle.setText(deal.title)
+        txtDescription.setText(deal.description)
+        txtPrice.setText(deal.price)
+        btnImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/jpeg"
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+            startActivityForResult(Intent.createChooser(intent, "Insert Picture"), 42)
+        }
     }
 
-    fun enableEditText(isEnabled : Boolean){
+    private fun enableEditText(isEnabled : Boolean){
         txtTitle.isEnabled = isEnabled
         txtDescription.isEnabled = isEnabled
         txtPrice.isEnabled = isEnabled
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == 42 && resultCode == Activity.RESULT_OK){
+            val imageUri = data!!.data
+            val ref = FirebaseUtil.mStorageReference.child(imageUri?.lastPathSegment!!)
+            ref.putFile(imageUri).addOnSuccessListener (requireActivity()
+            ) {
+                val url = it.storage.downloadUrl
+                deal.imgUrl = "$url"
+            }
+        }
     }
 
 }
